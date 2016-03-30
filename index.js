@@ -44,7 +44,7 @@ function S3Storage (opts) {
   this.options = opts
   this.getKey = (opts.key || defaultKey)
   this.getContentType = (opts.contentType || defaultContentType)
-  this.getMetadata = (opts.metaData || defaultMetaData)
+  this.getMetadata = (opts.metaData || defaultMetadata)
   this.s3 = new aws.S3(s3cfg)
 }
 

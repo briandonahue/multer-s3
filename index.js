@@ -4,6 +4,10 @@ var crypto = require('crypto')
 var stream = require('stream')
 var fileType = require('file-type')
 
+function defaultMetadata (req, file, cb) {
+  cb(null, null)
+}
+
 function defaultKey (req, file, cb) {
   crypto.randomBytes(16, function (err, raw) {
     cb(err, err ? undefined : raw.toString('hex'))
@@ -12,10 +16,6 @@ function defaultKey (req, file, cb) {
 
 function defaultContentType (req, file, cb) {
   setImmediate(function () { cb(null, 'application/octet-stream') })
-}
-
-function defaultMetadata (req, file, cb) {
-  setImmediate(function () { cb(null, null) })
 }
 
 function autoContentType (req, file, cb) {
@@ -53,10 +53,10 @@ S3Storage.prototype._handleFile = function (req, file, cb) {
   that.getKey(req, file, function (err, key) {
     if (err) return cb(err)
 
-    that.getContentType(req, file, function (err, contentType, _stream) {
+    that.getMetadata(req, file, function (err, metadata) {
       if (err) return cb(err)
 
-      that.getMetadata(req, file, function (err, metadata, _stream) {
+      that.getContentType(req, file, function (err, contentType, _stream) {
         if (err) return cb(err)
 
         var currentSize = 0
